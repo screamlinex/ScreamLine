@@ -6,18 +6,13 @@
   <title>Search | ScreamLine</title>
   <link rel="stylesheet" href="/ScreamLine/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-   <link href="/ScreamLine/img/favicon.png" rel="icon">
+  <link href="/ScreamLine/img/favicon.png" rel="icon">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body { background: #dbd9d9; font-family: Arial, sans-serif; }
     .search-results { max-width: 1000px; margin: 40px auto; padding: 0 15px; }
-    .result-item { display: flex; background: #fff; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow: hidden; }
-    .result-item img { width: 160px; height: 120px; object-fit: cover; }
-    .result-content { padding: 15px; flex: 1; }
-    .result-content h3 { font-size: 20px; margin: 0 0 10px; color: #222; }
-    .result-content p { font-size: 14px; color: #555; }
-    .result-content .meta { font-size: 13px; color: #999; margin-bottom: 8px; }
-    #loading { text-align: center; padding: 40px; font-size: 18px; color: #666; }
+    /* Optional: style Google results container */
+    .gcse-search-results { margin-top: 20px; }
   </style>
 </head>
 
@@ -26,115 +21,18 @@
   <!-- Dynamic Header -->
   <div id="header"></div>
 
+  <!-- Search Container -->
   <div class="search-results">
-    <h2 id="search-title">Search Results</h2>
-    <div id="results"></div>
-    <div id="loading">Loading results...</div>
+    <div class="gcse-search"></div>
   </div>
 
   <!-- Dynamic Footer -->
   <div id="footer"></div>
 
-  <script>
-    // Load header & footer dynamically
-    $("#header").load("/ScreamLine/templates/header.html");
-    $("#footer").load("/ScreamLine/templates/footer.html");
-    $("#sidebar").load("/ScreamLine/templates/sidebar.html");
+  <!-- Google Custom Search Engine -->
+  <script async src="https://cse.google.com/cse.js?cx=55f324fa4fc244d6d"></script>
 
-    // Get search query
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get("q")?.trim().toLowerCase() || "";
-    document.getElementById("search-title").innerText = `Search results for: "${query}"`;
-
-    // Folders to search
-    const folders = [
-      "/ScreamLine/music/",
-      "/ScreamLine/movies-tv/",
-      "/ScreamLine/scifi/",
-      "/ScreamLine/global/"
-    ];
-
-    const resultsContainer = document.getElementById("results");
-    const loading = document.getElementById("loading");
-
-    // Normalize paths for links & images
-    function normalizePath(path, folder) {
-      if (!path) return "/ScreamLine/img/default.jpg";
-      if (path.startsWith("/ScreamLine/")) return path;
-      return folder + path.replace(/^\.?\//, "");
-    }
-
-    async function fetchResults() {
-      let allResults = [];
-
-      for (const folder of folders) {
-        try {
-          const response = await fetch(folder);
-          const text = await response.text();
-
-          // Grab HTML filenames from folder listing
-          const matches = text.match(/href="([^"]+\.html)"/g);
-          if (!matches) continue;
-
-          for (const match of matches) {
-            const file = match.replace('href="', "").replace('"', "");
-            const fileUrl = normalizePath(file, folder);
-
-            const page = await fetch(fileUrl);
-            const html = await page.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-
-            const title =
-              doc.querySelector("h1")?.innerText ||
-              doc.querySelector("h3")?.innerText ||
-              file.replace(".html", "").replace(/_/g, " ");
-
-            const desc = doc.querySelector("p")?.innerText?.slice(0, 150) || "Read more...";
-            const img = normalizePath(doc.querySelector("img")?.getAttribute("src"), folder);
-            const date = doc.querySelector(".date")?.innerText ||
-                         doc.querySelector(".mb-3 span:last-child")?.innerText || "";
-
-            if (title.toLowerCase().includes(query) || desc.toLowerCase().includes(query)) {
-              allResults.push({
-                title,
-                desc,
-                img,
-                date,
-                link: fileUrl
-              });
-            }
-          }
-        } catch (e) {
-          console.warn("Error fetching from folder:", folder, e);
-        }
-      }
-
-      displayResults(allResults);
-    }
-
-    function displayResults(results) {
-      loading.style.display = "none";
-      if (results.length === 0) {
-        resultsContainer.innerHTML = `<p>No results found for "<b>${query}</b>".</p>`;
-        return;
-      }
-
-      resultsContainer.innerHTML = results.map(r => `
-        <div class="result-item">
-          <img src="${r.img}" alt="${r.title}">
-          <div class="result-content">
-            <div class="meta">${r.date}</div>
-            <h3><a href="${r.link}">${r.title}</a></h3>
-            <p>${r.desc}</p>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    if (query) fetchResults();
-    else loading.innerText = "Please enter a search term above.";
-  </script>
-<script src="/ScreamLine/js/load-templates.js"></script>
+  <!-- Load header & footer dynamically -->
+  <script src="/ScreamLine/js/load-templates.js"></script>
 </body>
 </html>
