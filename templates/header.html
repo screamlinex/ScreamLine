@@ -11,10 +11,10 @@
         <!-- Continuous ticker -->
         <div class="ticker-container flex-grow-1 ml-3">
           <div class="ticker-content">
-                    <span><a href="/ScreamLine/music/Florence___the_Machine_Announce_2026__Everybody_Scream__Nort.html" class="text-white">Florence + the Machine Announce 2026 ‘Everybody Scream’ North American Tour</a></span>
-                    <span><a href="/ScreamLine/music/The_Beatles_Preview__Anthology_4__With_Unreleased_Version_of.html" class="text-white">The Beatles Preview ‘Anthology 4’ With Unreleased Version of ‘I’ve Just Seen a Face’</a></span>
-                    <span><a href="/ScreamLine/movies-tv/June_Lockhart___Lost_In_Space__and__Lassie__Star__Dies_at_10.html" class="text-white">June Lockhart, ‘Lost In Space’ and ‘Lassie’ Star, Dies at 100</a></span>
-                </div>
+            <span><a href="/ScreamLine/music/Florence___the_Machine_Announce_2026__Everybody_Scream__Nort.html" class="text-white">Florence + the Machine Announce 2026 ‘Everybody Scream’ North American Tour</a></span>
+            <span><a href="/ScreamLine/music/The_Beatles_Preview__Anthology_4__With_Unreleased_Version_of.html" class="text-white">The Beatles Preview ‘Anthology 4’ With Unreleased Version of ‘I’ve Just Seen a Face’</a></span>
+            <span><a href="/ScreamLine/movies-tv/June_Lockhart___Lost_In_Space__and__Lassie__Star__Dies_at_10.html" class="text-white">June Lockhart, ‘Lost In Space’ and ‘Lassie’ Star, Dies at 100</a></span>
+          </div>
         </div>
       </div>
     </div>
@@ -72,39 +72,19 @@
         <a href="/ScreamLine/contact.html" class="nav-item nav-link">Contact</a>
       </div>
 
-      <!-- ✅ Search Bar (Functional) -->
-      <div class="input-group ml-auto" style="width: 100%; max-width: 300px;">
-        <input type="text" id="search-input" class="form-control" placeholder="Keyword">
-        <div class="input-group-append">
-          <button id="search-button" class="input-group-text text-secondary">
-            <i class="fa fa-search"></i>
-          </button>
-        </div>
+      <!-- ✅ Google Custom Search -->
+      <div class="ml-auto" style="width: 100%; max-width: 300px;">
+        <div class="gcse-search"></div>
       </div>
+      <script async src="https://cse.google.com/cse.js?cx=YOUR_CSE_ID"></script>
     </div>
   </nav>
 </div>
 <!-- Navbar End -->
 
-<!-- ✅ Search Script -->
+<!-- Live Clock Script -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("search-input");
-  const button = document.getElementById("search-button");
-
-  function searchNow() {
-    const query = input.value.trim();
-    if (query) {
-      window.location.href = `/ScreamLine/search.html?q=${encodeURIComponent(query)}`;
-    }
-  }
-
-  button.addEventListener("click", searchNow);
-  input.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") searchNow();
-  });
-
-  // Live date/time
   const dateEl = document.getElementById("current-date");
   if (dateEl) {
     setInterval(() => {
