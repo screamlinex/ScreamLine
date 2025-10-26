@@ -1,0 +1,116 @@
+<!-- Topbar Start -->
+<div class="container-fluid">
+  <div class="row align-items-center bg-dark px-lg-5 text-white" style="padding: 10px 0;">
+    <div class="col-12 col-md-8">
+      <div class="d-flex justify-content-between align-items-center">
+        <!-- Trending label -->
+        <div class="bg-primary text-white text-center py-2 px-3" style="min-width: 100px; font-weight: bold;">
+          Trending
+        </div>
+
+        <!-- Continuous ticker -->
+        <div class="ticker-container flex-grow-1 ml-3">
+          <div class="ticker-content">
+                    <span><a href="/ScreamLine/music/Florence___the_Machine_Announce_2026__Everybody_Scream__Nort.html" class="text-white">Florence + the Machine Announce 2026 ‘Everybody Scream’ North American Tour</a></span>
+                    <span><a href="/ScreamLine/music/The_Beatles_Preview__Anthology_4__With_Unreleased_Version_of.html" class="text-white">The Beatles Preview ‘Anthology 4’ With Unreleased Version of ‘I’ve Just Seen a Face’</a></span>
+                    <span><a href="/ScreamLine/movies-tv/June_Lockhart___Lost_In_Space__and__Lassie__Star__Dies_at_10.html" class="text-white">June Lockhart, ‘Lost In Space’ and ‘Lassie’ Star, Dies at 100</a></span>
+                </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date / Live Clock -->
+    <div class="col-md-4 text-right d-none d-md-block" id="current-date" style="font-weight: 500;"></div>
+  </div>
+
+  <div class="row align-items-center py-2 px-lg-5">
+    <div class="col-lg-4">
+      <a href="/ScreamLine/index.html" class="navbar-brand d-none d-lg-block">
+        <img src="/ScreamLine/img/screamline.png" alt="Scream Line Logo" style="height: 60px; width: auto;">
+      </a>
+    </div>
+    <div class="col-lg-8 text-center text-lg-right">
+      <img class="img-fluid" src="/ScreamLine/img/ads-700x70.jpg" alt="">
+    </div>
+  </div>
+</div>
+<!-- Topbar End -->
+
+<!-- Navbar Start -->
+<div class="container-fluid p-0 mb-3">
+  <nav class="navbar navbar-expand-lg bg-dark navbar-light py-2 py-lg-0 px-lg-5">
+    <a href="/ScreamLine/index.html" class="navbar-brand d-block d-lg-none">
+      <img src="/ScreamLine/img/screamline.png" alt="Scream Line Logo" style="height: 60px; width: auto;">
+    </a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between px-0 px-lg-3" id="navbarCollapse">
+      <div class="navbar-nav mr-auto py-0">
+        <a href="/ScreamLine/index.html" class="nav-item nav-link active">Home</a>
+        <a href="/ScreamLine/music.html" class="nav-item nav-link">Music</a>
+        <a href="/ScreamLine/global.html" class="nav-item nav-link">Global News</a>
+        <a href="/ScreamLine/scifi.html" class="nav-item nav-link">Science</a>
+
+        <div class="nav-item dropdown d-flex align-items-center">
+          <a href="/ScreamLine/movies-tv.html" class="nav-link">Movies & TV Shows</a>
+        </div>
+
+        <a href="/ScreamLine/interviews.html" class="nav-item nav-link">Videos</a>
+        <a href="/ScreamLine/library.html" class="nav-item nav-link">Library</a>
+
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">More</a>
+          <div class="dropdown-menu rounded-0 m-0">
+            <a href="/ScreamLine/about.html" class="dropdown-item">About</a>
+            <a href="/ScreamLine/advertise.html" class="dropdown-item">Advertise</a>
+            <a href="/ScreamLine/terms-conditions.html" class="dropdown-item">Terms & conditions</a>
+            <a href="/ScreamLine/privacy-policy.html" class="dropdown-item">Privacy & policy</a>
+          </div>
+        </div>
+
+        <a href="/ScreamLine/contact.html" class="nav-item nav-link">Contact</a>
+      </div>
+
+      <!-- ✅ Search Bar (Functional) -->
+      <div class="input-group ml-auto" style="width: 100%; max-width: 300px;">
+        <input type="text" id="search-input" class="form-control" placeholder="Keyword">
+        <div class="input-group-append">
+          <button id="search-button" class="input-group-text text-secondary">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+<!-- Navbar End -->
+
+<!-- ✅ Search Script -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("search-input");
+  const button = document.getElementById("search-button");
+
+  function searchNow() {
+    const query = input.value.trim();
+    if (query) {
+      window.location.href = `/ScreamLine/search.html?q=${encodeURIComponent(query)}`;
+    }
+  }
+
+  button.addEventListener("click", searchNow);
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") searchNow();
+  });
+
+  // Live date/time
+  const dateEl = document.getElementById("current-date");
+  if (dateEl) {
+    setInterval(() => {
+      const now = new Date();
+      dateEl.textContent = now.toLocaleString();
+    }, 1000);
+  }
+});
+</script>
