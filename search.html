@@ -8,11 +8,43 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="/ScreamLine/img/favicon.png" rel="icon">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Google CSE Script -->
+  <script async src="https://cse.google.com/cse.js?cx=55f324fa4fc244d6d"></script>
+
   <style>
     body { background: #dbd9d9; font-family: Arial, sans-serif; }
     .search-results { max-width: 1000px; margin: 40px auto; padding: 0 15px; }
-    /* Optional: style Google results container */
-    .gcse-search-results { margin-top: 20px; }
+    
+    /* Style Google CSE results to match your design */
+    .gsc-control-cse {
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+    }
+    .gsc-result {
+      background: #fff !important;
+      border-radius: 8px !important;
+      margin-bottom: 20px !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+      overflow: hidden;
+      display: flex !important;
+      flex-direction: row;
+    }
+    .gs-title { font-size: 20px !important; color: #222 !important; }
+    .gs-title a { color: #222 !important; text-decoration: none !important; }
+    .gs-title a:hover { text-decoration: underline !important; }
+    .gs-snippet { font-size: 14px !important; color: #555 !important; }
+    .gsc-thumbnail { width: 160px !important; height: 120px !important; object-fit: cover !important; }
+    .gsc-result-info { font-size: 13px !important; color: #999 !important; margin-bottom: 8px !important; }
+    .gsc-result .gs-visibleUrl { display: none; }
+
+    /* Hide unwanted Google elements */
+    .gsc-cursor-box, .gsc-adBlock, .gsc-branding { display: none !important; }
+
+    /* No results message */
+    .gsc-results .gsc-cursor-page { display: none; }
+    .gsc-above-wrapper-area { display: none; }
   </style>
 </head>
 
@@ -21,18 +53,51 @@
   <!-- Dynamic Header -->
   <div id="header"></div>
 
-  <!-- Search Container -->
   <div class="search-results">
-    <div class="gcse-search"></div>
+    <h2 id="search-title">Search Results</h2>
+
+    <!-- Google CSE Results -->
+    <div class="gcse-searchresults-only" 
+         data-queryParameterName="q"
+         data-resultsUrl="/ScreamLine/search.html">
+    </div>
+
+    <div id="loading" style="text-align:center; padding:40px; color:#666; font-size:18px;">
+      Loading search results...
+    </div>
   </div>
 
   <!-- Dynamic Footer -->
   <div id="footer"></div>
 
-  <!-- Google Custom Search Engine -->
-  <script async src="https://cse.google.com/cse.js?cx=55f324fa4fc244d6d"></script>
+  <script>
+    // Load header & footer
+    $(function() {
+      $("#header").load("/ScreamLine/templates/header.html");
+      $("#footer").load("/ScreamLine/templates/footer.html");
+      $("#sidebar").load("/ScreamLine/templates/sidebar.html");
+    });
 
-  <!-- Load header & footer dynamically -->
+    // Optional: Hide loading when results are ready
+    window.__gcse = {
+      callback: function() {
+        setTimeout(() => {
+          document.getElementById("loading").style.display = "none";
+        }, 800);
+      }
+    };
+
+    // Update page title with query
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get("q")?.trim();
+    if (query) {
+      document.getElementById("search-title").innerText = `Search results for: "${query}"`;
+    } else {
+      document.getElementById("search-title").innerText = "Enter a search term";
+      document.getElementById("loading").innerText = "Please use the search box above.";
+    }
+  </script>
+
   <script src="/ScreamLine/js/load-templates.js"></script>
 </body>
 </html>
