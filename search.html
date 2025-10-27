@@ -23,7 +23,6 @@
 </head>
 
 <body>
-
   <!-- Dynamic Header -->
   <div id="header"></div>
 
@@ -36,63 +35,61 @@
   <!-- Dynamic Footer -->
   <div id="footer"></div>
 
-  <script>
-    // Load header & footer
-    $("#header").load("/ScreamLine/templates/header.html");
-    $("#footer").load("/ScreamLine/templates/footer.html");
+ <script>
+  // Load header & footer dynamically
+  $("#header").load("/ScreamLine/templates/header.html");
+  $("#footer").load("/ScreamLine/templates/footer.html");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get("q")?.trim().toLowerCase() || "";
-    document.getElementById("search-title").innerText = query
-      ? `Search results for: "${query}"`
-      : "Enter a search term above.";
+  const resultsContainer = document.getElementById("results");
+  const loading = document.getElementById("loading");
 
-    const resultsContainer = document.getElementById("results");
-    const loading = document.getElementById("loading");
+  // Get search query
+  const urlParams = new URLSearchParams(window.location.search);
+  const query = urlParams.get("q")?.trim().toLowerCase() || "";
+  document.getElementById("search-title").innerText = `Search results for: "${query}"`;
 
-    // ✅ Fetch stored index from localStorage
-    const allNews = JSON.parse(localStorage.getItem("screamline_news_index") || "[]");
+  // Normalize image/link paths
+  function normalizePath(path, defaultImg="/ScreamLine/img/default.jpg") {
+    return path ? path : defaultImg;
+  }
 
-    function displayResults(results) {
+  // Fetch the JSON file
+  fetch("/ScreamLine/filelist.json")
+    .then(res => res.json())
+    .then(allNews => {
       loading.style.display = "none";
-      if (!results.length) {
+
+      // Filter by query
+      const filtered = query
+        ? allNews.filter(item =>
+            item.title.toLowerCase().includes(query) ||
+            item.desc.toLowerCase().includes(query)
+          )
+        : allNews; // show all if no query
+
+      if (filtered.length === 0) {
         resultsContainer.innerHTML = `<p>No results found for "<b>${query}</b>".</p>`;
         return;
       }
 
-      resultsContainer.innerHTML = results.map(r => `
+      // Display results
+      resultsContainer.innerHTML = filtered.map(item => `
         <div class="result-item">
-          <img src="${r.img}" alt="${r.title}">
+          <img src="${normalizePath(item.img)}" alt="${item.title}">
           <div class="result-content">
-            <div class="meta">${r.date || ""}</div>
-            <h3><a href="${r.link}">${r.title}</a></h3>
-            <p>${r.desc}</p>
+            <div class="meta">${item.date}</div>
+            <h3><a href="${item.link}">${item.title}</a></h3>
+            <p>${item.desc}</p>
           </div>
         </div>
       `).join("");
-    }
+    })
+    .catch(err => {
+      console.error("Error loading filelist.json:", err);
+      loading.innerText = "Failed to load news. Please try again later.";
+    });
+</script>
 
-    function performSearch() {
-      if (!query) {
-        loading.innerText = "Please enter a search term above.";
-        return;
-      }
-
-      if (!allNews.length) {
-        loading.innerText = "Index not ready. Please refresh the page in a few seconds.";
-        return;
-      }
-
-      const filtered = allNews.filter(r =>
-        r.title.toLowerCase().includes(query) ||
-        r.desc.toLowerCase().includes(query)
-      );
-
-      displayResults(filtered);
-    }
-
-    performSearch();
-  </script>
 
   <script src="/ScreamLine/js/load-templates.js"></script>
 </body>
