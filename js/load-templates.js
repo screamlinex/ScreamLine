@@ -10,10 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(data => {
         headerContainer.innerHTML = data;
 
-        // Enable search and live clock once header is loaded
+        // --- Initialize search ---
         const input = document.getElementById("search-input");
         const button = document.getElementById("search-button");
-        const dateEl = document.getElementById("current-date");
 
         function searchNow() {
           const query = input?.value.trim();
@@ -29,11 +28,25 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }
 
+        // --- Initialize clock ---
+        const dateEl = document.getElementById("current-date");
         if (dateEl) {
-          setInterval(() => {
+          function updateClock() {
             const now = new Date();
-            dateEl.textContent = now.toLocaleString();
-          }, 1000);
+            const date = now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            dateEl.textContent = `${date} ${time}`;
+          }
+
+          // Initial load
+          updateClock();
+
+          // Update exactly when the minute changes
+          const msToNextMinute = (60 - new Date().getSeconds()) * 1000 + 50;
+          setTimeout(function tick() {
+            updateClock();
+            setTimeout(tick, 60000);
+          }, msToNextMinute);
         }
       })
       .catch(err => console.error("Header load error:", err));

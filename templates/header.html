@@ -11,10 +11,10 @@
         <!-- Continuous ticker -->
         <div class="ticker-container flex-grow-1 ml-3">
           <div class="ticker-content">
-                    <span><a href="/ScreamLine/music/Radiohead_Talk_European_Tour_and_Why_They_Took_Break_in_New.html" class="text-white">Radiohead Talk European Tour and Why They Took Break in New Interview: ‘The Wheels Came Off a Bit’</a></span>
-                    <span><a href="/ScreamLine/music/Watch_Poppy_Join_Linkin_Park_for_Classic_Song_During_Tour_Ki.html" class="text-white">Watch Poppy Join Linkin Park for Classic Song During Tour Kickoff</a></span>
-                    <span><a href="/ScreamLine/movies-tv/_Star_Wars__Fans_Launch_Billboard_Campaign_to_Save__The_Hunt.html" class="text-white">‘Star Wars’ Fans Launch Billboard Campaign to Save ‘The Hunt for Ben Solo’: ‘No One’s Ever Really Gone’</a></span>
-                </div>
+            <span><a href="/ScreamLine/music/Radiohead_Talk_European_Tour_and_Why_They_Took_Break_in_New.html" class="text-white">Radiohead Talk European Tour and Why They Took Break in New Interview: ‘The Wheels Came Off a Bit’</a></span>
+            <span><a href="/ScreamLine/music/Watch_Poppy_Join_Linkin_Park_for_Classic_Song_During_Tour_Ki.html" class="text-white">Watch Poppy Join Linkin Park for Classic Song During Tour Kickoff</a></span>
+            <span><a href="/ScreamLine/movies-tv/_Star_Wars__Fans_Launch_Billboard_Campaign_to_Save__The_Hunt.html" class="text-white">‘Star Wars’ Fans Launch Billboard Campaign to Save ‘The Hunt for Ben Solo’: ‘No One’s Ever Really Gone’</a></span>
+          </div>
         </div>
       </div>
     </div>
@@ -51,14 +51,9 @@
         <a href="/ScreamLine/music.html" class="nav-item nav-link">Music</a>
         <a href="/ScreamLine/global.html" class="nav-item nav-link">Global News</a>
         <a href="/ScreamLine/scifi.html" class="nav-item nav-link">Science</a>
-
-        <div class="nav-item dropdown d-flex align-items-center">
-          <a href="/ScreamLine/movies-tv.html" class="nav-link">Movies & TV Shows</a>
-        </div>
-
+        <a href="/ScreamLine/movies-tv.html" class="nav-link">Movies & TV Shows</a>
         <a href="/ScreamLine/interviews.html" class="nav-item nav-link">Videos</a>
         <a href="/ScreamLine/library.html" class="nav-item nav-link">Library</a>
-
         <div class="nav-item dropdown">
           <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">More</a>
           <div class="dropdown-menu rounded-0 m-0">
@@ -68,11 +63,10 @@
             <a href="/ScreamLine/privacy-policy.html" class="dropdown-item">Privacy & policy</a>
           </div>
         </div>
-
         <a href="/ScreamLine/contact.html" class="nav-item nav-link">Contact</a>
       </div>
 
-      <!-- ✅ Search Bar (Functional) -->
+      <!-- Search Bar -->
       <div class="input-group ml-auto" style="width: 100%; max-width: 300px;">
         <input type="text" id="search-input" class="form-control" placeholder="Keyword">
         <div class="input-group-append">
@@ -86,12 +80,14 @@
 </div>
 <!-- Navbar End -->
 
-<!-- ✅ Search Script -->
+<!-- Script -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("search-input");
   const button = document.getElementById("search-button");
+  const dateEl = document.getElementById("current-date");
 
+  // Search functionality
   function searchNow() {
     const query = input.value.trim();
     if (query) {
@@ -100,17 +96,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   button.addEventListener("click", searchNow);
-  input.addEventListener("keypress", (e) => {
+  input.addEventListener("keypress", e => {
     if (e.key === "Enter") searchNow();
   });
 
-  // Live date/time
-  const dateEl = document.getElementById("current-date");
+  // Live date/time (hours & minutes only, no flicker)
   if (dateEl) {
-    setInterval(() => {
+    function updateClock() {
       const now = new Date();
-      dateEl.textContent = now.toLocaleString();
-    }, 1000);
+      const date = now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      dateEl.textContent = `${date} ${time}`;
+    }
+
+    updateClock(); // initial load
+
+    // Update exactly when minute changes
+    const msToNextMinute = (60 - new Date().getSeconds()) * 1000 + 50; // small buffer
+    setTimeout(function tick() {
+      updateClock();
+      setTimeout(tick, 60000); // every 60 seconds
+    }, msToNextMinute);
   }
 });
 </script>
